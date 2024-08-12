@@ -205,6 +205,13 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QPushButton" name="btnSaveHostsFile">
+           <property name="text">
+            <string>Сохранить hosts</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </widget>

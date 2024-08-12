@@ -226,3 +226,29 @@ void MainWindow::longTaskWithOneUrl(const QString& itemUrl, const QString& fileN
     transformUrls(TEMP_FILE, MODIFIED_FILE);
     deleteFileByName(TEMP_FILE);
 }
+
+void MainWindow::on_btnSaveHostsFile_clicked()
+{
+    QString hostsFileName("hosts");
+    QString allText = ui->textEdit->toPlainText();
+    QFile output(hostsFileName);
+    if (!output.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        output.close();
+        return;
+    }
+
+    QTextStream out(&output);
+
+
+    out << "127.0.0.1 localhost" << Qt::endl;
+    out << "::1     ip6-localhost ip6-loopback" << Qt::endl;
+    out << "fe00::0 ip6-localnet" << Qt::endl;
+    out << "ff00::0 ip6-mcastprefix" << Qt::endl;
+    out << "ff02::1 ip6-allnodes" << Qt::endl;
+    out << "ff02::2 ip6-allrouters" << Qt::endl;
+
+    out << allText;
+
+    output.close();
+}
+
