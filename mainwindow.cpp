@@ -119,7 +119,7 @@ void MainWindow::getHostsByItems(QAbstractItemModel* model){
             this->updateTextView(MODIFIED_FILE);
 
             deleteFileByName(MODIFIED_FILE);
-            this->ui->progressBar->setValue(row);
+            this->ui->progressBar->setValue(row+1);
             watcher->deleteLater(); // Clean up
 
         });
