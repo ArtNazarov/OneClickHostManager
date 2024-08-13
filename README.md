@@ -15,3 +15,9 @@ sudo cp hosts /etc/hosts
 Screenshot
 
 ![Screenshot](https://dl.dropbox.com/scl/fi/hzluigj87dxooub7ymlmj/OneClickHostManager.png?rlkey=d4j70dtdjij2h46qw4ynjw1ye&st=oavyyo9b)
+
+Installing hosts blocklist list on Android
+
+1. Install TWRP and open Terminal
+2. Find hosts file using ```find / -iname hosts```
+3. Replace it using finded location: ```cp hosts /data/adb/modules/hosts/system/etc/hosts``` for example
