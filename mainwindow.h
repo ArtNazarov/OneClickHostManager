@@ -17,13 +17,13 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    static QString veryLongTask();
+    static QString veryLongTask(bool includeAdultSites);
     static void longTaskWithOneUrl(const QString& itemUrl, const QString& fileNamePrefix);
     void showListsUrls();
 
     void updateTextView(const QString& fileName);
     void getHostsByItems(QAbstractItemModel* model);
-    void launchVeryLongTask();
+    void launchVeryLongTask(bool includeAdultSites);
 
 private slots:
     void on_btnGetHosts_clicked();

@@ -91,6 +91,13 @@
          <item>
           <widget class="QListView" name="listView"/>
          </item>
+         <item>
+          <widget class="QCheckBox" name="cbxBlockAdultContent">
+           <property name="text">
+            <string>Блокировать 18+</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </widget>

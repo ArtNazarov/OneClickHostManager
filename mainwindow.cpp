@@ -3,6 +3,9 @@
 #include "./downloader.h"
 #include "./transformurls.h"
 #include "./deletefiles.h"
+#include "./adultfilelists.h"
+#include "./appendfilebyname.h"
+
 #include <QDebug>
 #include <QDialog>
 #include <QTextStream>
@@ -14,8 +17,10 @@
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QtConcurrent/QtConcurrent>
+#include <algorithm> // For std::max
 
 const QString LISTS_SOURCE("lists.txt");
+static int taskCounter = 0;
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -33,7 +38,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_btnGetHosts_clicked()
 {
-    launchVeryLongTask();
+    bool includeAdultsSites = this->ui->cbxBlockAdultContent->isChecked();
+    launchVeryLongTask(includeAdultsSites);
 }
 
 void MainWindow::showListsUrls(){
@@ -58,12 +64,15 @@ void MainWindow::showListsUrls(){
     QTextStream in(&input);
 
     QStringList lines;
+
     while (!in.atEnd()) {
         QString line = in.readLine();
         lines << line;
     }
 
     input.close();
+
+
     QStringListModel* model = new QStringListModel( lines, this);
     ui->listView->setModel(model);
     this->getHostsByItems(this->ui->listView->model());
@@ -86,7 +95,9 @@ void MainWindow::getHostsByItems(QAbstractItemModel* model){
 
     this->ui->progressBar->setMinimum(0);
     this->ui->progressBar->setMaximum( model->rowCount());
-    for (int row = 0; row < model->rowCount(); ++row) {
+    const int MODEL_ROW_COUNT = model->rowCount();
+
+    for (int row = 0; row < MODEL_ROW_COUNT ; ++row) {
         QModelIndex index = model->index(row, 0);
         QString itemUrl = model->data(index).toString();
 
@@ -119,7 +130,9 @@ void MainWindow::getHostsByItems(QAbstractItemModel* model){
             this->updateTextView(MODIFIED_FILE);
 
             deleteFileByName(MODIFIED_FILE);
-            this->ui->progressBar->setValue(row+1);
+            int value = this->ui->progressBar->value();
+            taskCounter++;
+            this->ui->progressBar->setValue(taskCounter);
             watcher->deleteLater(); // Clean up
 
         });
@@ -130,9 +143,11 @@ void MainWindow::getHostsByItems(QAbstractItemModel* model){
 }
 
 
-void MainWindow::launchVeryLongTask(){
+void MainWindow::launchVeryLongTask(bool includeAdultSites){
 
-    QFuture<QString> future = QtConcurrent::run(this->veryLongTask);
+
+
+    QFuture<QString> future = QtConcurrent::run(this->veryLongTask, includeAdultSites);
     QFutureWatcher<QString> *watcher = new QFutureWatcher<QString>(this);
     watcher->setFuture(future);
     connect(watcher, &QFutureWatcher<QString>::finished, this, [this, watcher]() {
@@ -146,10 +161,19 @@ void MainWindow::launchVeryLongTask(){
     watcher->setFuture(future);
 
 }
-QString MainWindow::veryLongTask(){
+QString MainWindow::veryLongTask(bool includeAdultSites){
 
     const QString URL_SOURCE("https://v.firebog.net/hosts/lists.php?type=tick");
     downloadFile(URL_SOURCE, LISTS_SOURCE);
+
+    if (includeAdultSites){
+        QStringList items;
+        addAdultLists(items);
+        appendFileByName(LISTS_SOURCE, items);
+    }
+
+
+
     // Read strings from file
     QFile file(LISTS_SOURCE);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -165,6 +189,8 @@ QString MainWindow::veryLongTask(){
         dialog.exec(); // Show dialog modally
         return "Error with source files";
     }
+
+
 
     QTextStream textStream(&file);
     QStringList lines;

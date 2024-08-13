@@ -1,7 +1,7 @@
 # OneClickHostManager
 Downloads hosts by list to one file
 
-Sources of lists: https://firebog.net
+Sources of lists: https://firebog.net ; https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/porn-only/hosts
 
 How to use:
 

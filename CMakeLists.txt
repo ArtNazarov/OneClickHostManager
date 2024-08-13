@@ -42,6 +42,8 @@ else()
             downloader.h downloader.cpp
             transformurls.h transformurls.cpp
             deletefiles.h deletefiles.cpp
+            appendfilebyname.h appendfilebyname.cpp
+            adultfilelists.h adultfilelists.cpp
 
         )
     endif()
