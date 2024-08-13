@@ -11,3 +11,7 @@ How to use:
 ```
 sudo cp hosts /etc/hosts
 ```
+
+Screenshot
+
+![Screenshot](https://dl.dropbox.com/scl/fi/hzluigj87dxooub7ymlmj/OneClickHostManager.png?rlkey=d4j70dtdjij2h46qw4ynjw1ye&st=oavyyo9b)
