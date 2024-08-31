@@ -172,6 +172,10 @@ QString MainWindow::veryLongTask(bool includeAdultSites){
         appendFileByName(LISTS_SOURCE, items);
     }
 
+    QStringList other_list;
+    other_list << QString("https://raw.githubusercontent.com/CrafterKolyan/hosts-adblock/master/hosts");
+    appendFileByName(LISTS_SOURCE, other_list);
+
 
 
     // Read strings from file
@@ -226,7 +230,10 @@ void MainWindow::updateTextView(const QString& fileName){
     QString lines = "";
     while (!textStream.atEnd()) {
         QString line = textStream.readLine();
+        line.replace("^", "");
+        line.replace("||", "");
         if (line.contains("127.0.0.1")||line.contains("0.0.0.0")){
+            line.replace("127.0.0.1", "0.0.0.0");
             lines.append(line);
         };
         if (!line.contains("127.0.0.1")&&!line.contains("0.0.0.0")){
